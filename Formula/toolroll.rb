@@ -1,8 +1,8 @@
 class Toolroll < Formula
   desc "Control plane for unattended coding agents"
   homepage "https://github.com/ap9000/toolroll"
-  url "https://registry.npmjs.org/toolroll/-/toolroll-0.7.0.tgz"
-  sha256 "eece3d2c59fdbae47c3e9d8ea29329eed084daf959f6d8bdab1a42b9e6991c82"
+  url "https://registry.npmjs.org/toolroll/-/toolroll-0.8.0.tgz"
+  sha256 "82c15b4963d2ea35eccc3fcafaa44272deedc726de216fb01e3e9ca4fc132a29"
   license "MIT"
 
   depends_on "node"
