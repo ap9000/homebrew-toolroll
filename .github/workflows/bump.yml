@@ -1,0 +1,28 @@
+name: Follow npm releases
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Point the formula at the latest npm release
+        run: |
+          set -euo pipefail
+          latest=$(curl -fsSL https://registry.npmjs.org/toolroll/latest | jq -r .version)
+          current=$(sed -nE 's#.*toolroll-([0-9][^"]*)\.tgz".*#\1#p' Formula/toolroll.rb)
+          if [ "$latest" = "$current" ]; then echo "Already at $current"; exit 0; fi
+          url="https://registry.npmjs.org/toolroll/-/toolroll-${latest}.tgz"
+          sha=$(curl -fsSL "$url" | sha256sum | cut -d' ' -f1)
+          sed -i -E "s#^  url \".*\"#  url \"${url}\"#; s#^  sha256 \".*\"#  sha256 \"${sha}\"#" Formula/toolroll.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "toolroll ${latest}"
+          git push
